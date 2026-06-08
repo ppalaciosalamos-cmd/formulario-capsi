@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cuestionario CAPSI — Modelo Nacional</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f2ed;
+      --surface: #ffffff;
+      --primary: #1a3a2a;
+      --accent: #4a7c59;
+      --accent-light: #e8f0eb;
+      --text: #1c1c1c;
+      --text-muted: #6b6b6b;
+      --border: #d8d4ce;
+      --error: #c0392b;
+      --radius: 12px;
+      --shadow: 0 2px 20px rgba(26,58,42,0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--primary);
+      color: white;
+      padding: 48px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(74,124,89,0.2);
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(74,124,89,0.15);
+    }
+    .header-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+    .header-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 5vw, 38px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .header p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* PROGRESS */
+    .progress-container {
+      background: var(--primary);
+      padding: 0 24px 24px;
+    }
+    .progress-bar-wrap {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+    }
+    .progress-track {
+      height: 4px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #7ab48a;
+      border-radius: 2px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* MAIN */
+    .main {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* SECTION */
+    .section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .section.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      margin-bottom: 32px;
+    }
+    .section-badge {
+      display: inline-block;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--primary);
+      line-height: 1.3;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .question-label {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .question-label .req { color: var(--accent); margin-left: 2px; }
+
+    /* RADIO / CHECKBOX */
+    .options-list { display: flex; flex-direction: column; gap: 10px; }
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .option-item:hover { border-color: var(--accent); background: var(--accent-light); }
+    .option-item input { display: none; }
+    .option-item .dot {
+      width: 18px; height: 18px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .option-item.checkbox .dot { border-radius: 4px; }
+    .option-item.selected {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+    .option-item.selected .dot {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .option-item.selected .dot::after {
+      content: '';
+      display: block;
+      width: 6px; height: 6px;
+      background: white;
+      border-radius: 50%;
+    }
+    .option-item.checkbox.selected .dot::after {
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 5l2.5 2.5 4.5-4.5' stroke='%234a7c59' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;
+      background-color: var(--accent);
+    }
+
+    /* "Otro" input */
+    .otro-input {
+      margin-top: 8px;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      width: 100%;
+      display: none;
+      background: #fafafa;
+    }
+    .otro-input:focus { outline: none; border-color: var(--accent); }
+    .show-otro { display: block; }
+
+    /* LIKERT TABLE */
+    .likert-wrap { overflow-x: auto; }
+    .likert-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .likert-legend {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0;
+      margin-bottom: 12px;
+    }
+    .likert-legend span {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      max-width: 44px;
+    }
+    .likert-scale-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      padding-left: 0;
+    }
+    .likert-row {
+      display: flex;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid #f0ece6;
+      gap: 8px;
+    }
+    .likert-row:last-child { border-bottom: none; }
+    .likert-text {
+      flex: 1;
+      font-size: 13.5px;
+      line-height: 1.4;
+      padding-right: 16px;
+      color: var(--text);
+    }
+    .likert-options {
+      display: flex;
+      gap: 0;
+      flex-shrink: 0;
+    }
+    .likert-btn {
+      width: 40px; height: 40px;
+      border: 1.5px solid var(--border);
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: all 0.15s;
+      margin: 0 2px;
+    }
+    .likert-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .likert-btn.selected {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* TEXTAREA */
+    .open-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+      background: #fafafa;
+      resize: vertical;
+      transition: border-color 0.15s;
+    }
+    .open-textarea:focus { outline: none; border-color: var(--accent); background: white; }
+    .char-count { font-size: 11px; color: var(--text-muted); text-align: right; margin-top: 6px; }
+
+    /* LIKERT SCALE DESCRIPTION */
+    .scale-desc {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    /* NAVIGATION */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      gap: 12px;
+    }
+    .btn {
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+    .btn-prev {
+      background: white;
+      color: var(--text-muted);
+      border: 1.5px solid var(--border);
+    }
+    .btn-prev:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-next {
+      background: var(--primary);
+      color: white;
+      margin-left: auto;
+    }
+    .btn-next:hover { background: var(--accent); }
+    .btn-submit {
+      background: var(--accent);
+      color: white;
+      padding: 16px 36px;
+      font-size: 15px;
+      margin-left: auto;
+    }
+    .btn-submit:hover { background: var(--primary); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* SUCCESS */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 80px 24px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .success-screen.show { display: block; }
+    .success-icon {
+      width: 72px; height: 72px;
+      background: var(--accent-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 32px;
+    }
+    .success-screen h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+    .success-screen p { color: var(--text-muted); line-height: 1.6; font-size: 15px; }
+
+    /* ERROR */
+    .error-msg {
+      color: var(--error);
+      font-size: 12px;
+      margin-top: 6px;
+      display: none;
+    }
+    .has-error .error-msg { display: block; }
+    .has-error .option-item, .has-error .open-textarea, .has-error .likert-btn {
+      border-color: #e8a89e;
+    }
+
+    /* SENDING */
+    .sending-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,58,42,0.85);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      color: white;
+    }
+    .sending-overlay.show { display: flex; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .card { padding: 20px; }
+      .likert-btn { width: 34px; height: 34px; font-size: 11px; }
+      .likert-text { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SENDING OVERLAY -->
+<div class="sending-overlay" id="sendingOverlay">
+  <div class="spinner"></div>
+  <div style="font-size:15px; font-weight:500;">Enviando respuestas…</div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-label">CAPSI · Universidad Andrés Bello</div>
+    <h1>Cuestionario sobre el Modelo CAPSI</h1>
+    <p>Este cuestionario tiene como objetivo recoger perspectivas y experiencias de quienes trabajan en CAPSI para contribuir al desarrollo de un modelo nacional. Tiempo estimado: 15–20 minutos.</p>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-container">
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span id="progressLabel">Sección 0 de 8</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="mainContainer">
+
+  <!-- ===== SECCIÓN 0: IDENTIFICACIÓN ===== -->
+  <div class="section active" id="sec0">
+    <div class="section-header">
+      <div class="section-badge">Inicio</div>
+      <div class="section-title">Antes de comenzar</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">Su nombre completo <span class="req">*</span></div>
+      <input type="text" id="nombre" class="open-textarea" style="min-height:unset;height:48px;resize:none;" placeholder="Ingrese su nombre" />
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">Sede o campus donde trabaja <span class="req">*</span></div>
+      <input type="text" id="sede" class="open-textarea" style="min-height:unset;height:48px;resize:none;" placeholder="Ej: CAPSI Casona, CAPSI Casita, Viña del Mar…" />
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-next" onclick="goNext(0)">Comenzar →</button>
+    </div>
+  </div>
+
+  <!-- ===== SECCIÓN 1: IDENTIFICACIÓN ROL ===== -->
+  <div class="section" id="sec1">
+    <div class="section-header">
+      <div class="section-badge">Sección I</div>
+      <div class="section-title">Identificación del rol</div>
+    </div>
+
+    <!-- P1: Rol -->
+    <div class="card" id="q_rol">
+      <div class="question-label">1. Indique su rol principal dentro del CAPSI <span class="req">*</span></div>
+      <div class="options-list">
+        <div class="option-item" onclick="selectRadio(this,'rol')">
+          <input type="radio" name="rol" value="Directora/coordinadora del CAPSI"/>
+          <div class="dot"></div> Directora/coordinadora del CAPSI
+        </div>
+        <div class="option-item" onclick="selectRadio(this,'rol')">
+          <input type="radio" name="rol" value="Psicóloga/o de staff"/>
+          <div class="dot"></div> Psicóloga/o de staff
+        </div>
+        <div class="option-item" onclick="selectRadio(this,'rol')">
+          <input type="radio" name="rol" value="Coordinadora/or clínica/o"/>
+          <div class="dot"></div> Coordinadora/or clínica/o
+        </div>
+        <div class="option-item" onclick="selectRadio(this,'rol')">
+          <input type="radio" name="rol" value="Supervisora/or clínica/o"/>
+          <div class="dot"></div> Supervisora/or clínica/o
+        </div>
+        <div class="option-item" onclick="selectRadio(this,'rol'); toggleOtro('otro_rol',this)">
+          <input type="radio" name="rol" value="Otro"/>
+          <div class="dot"></div> Otro
+        </div>
+        <input type="text" id="otro_rol" class="otro-input" placeholder="Especifique…" />
+      </div>
+      <div class="error-msg">Seleccione una opción.</div>
+    </div>
+
+    <!-- P2: Tiempo -->
+    <div class="card" id="q_tiempo">
+      <div class="question-label">2. ¿Cuánto tiempo lleva vinculada/o al trabajo del CAPSI? <span class="req">*</span></div>
+      <div class="options-list">
+        <div class="option-item" onclick="selectRadio(this,'tiempo')">
+          <input type="radio" name="tiempo" value="Menos de 1 año"/>
+          <div class="dot"></div> Menos de 1 año
+        </div>
+        <div class="option-item" onclick="selectRadio(this,'tiempo')">
+          <input type="radio" name="tiempo" value="Entre 1 y 3 años"/>
+          <div class="dot"></div> Entre 1 y 3 años
+        </div>
+        <div class="option-item" onclick="selectRadio(this,'tiempo')">
+          <input type="radio" name="tiempo" value="Entre 4 y 6 años"/>
+          <div class="dot"></div> Entre 4 y 6 años
+        </div>
+        <div class="option-item" onclick="selectRadio(this,'tiempo')">
+          <input type="radio" name="tiempo" value="Más de 6 años"/>
+          <div class="dot"></div> Más de 6 años
+        </div>
+      </div>
+      <div class="error-msg">Seleccione una opción.</div>
+    </div>
+
+    <!-- P3: Áreas -->
+    <div class="card" id="q_areas">
+      <div class="question-label">3. ¿En qué áreas participa actualmente? <span style="font-weight:300;color:var(--text-muted)">(puede marcar más de una)</span></div>
+      <div class="options-list">
+        <div class="option-item checkbox" onclick="toggleCheck(this)">
+          <input type="checkbox" name="areas" value="Gestión clínica"/>
+          <div class="dot"></div> Gestión clínica
+        </div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)">
+          <input type="checkbox" name="areas" value="Gestión administrativa"/>
+          <div class="dot"></div> Gestión administrativa
+        </div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)">
+          <input type="checkbox" name="areas" value="Supervisión de estudiantes"/>
+          <div class="dot"></div> Supervisión de estudiantes
+        </div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)">
+          <input type="checkbox" name="areas" value="Atención directa de usuarios/as"/>
+          <div class="dot"></div> Atención directa de usuarios/as
+        </div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)">
+          <input type="checkbox" name="areas" value="Primera acogida o ingreso"/>
+          <div class="dot"></div> Primera acogida o ingreso
+        </div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)">
+          <input type="checkbox" name="areas" value="Derivación y seguimiento de casos"/>
+          <div class="dot"></div> Derivación y seguimiento de casos
+        </div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)">
+          <input type="checkbox" name="areas" value="Coordinación con redes"/>
+          <div class="dot"></div> Coordinación con redes
+        </div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)">
+          <input type="checkbox" name="areas" value="Docencia o formación clínica"/>
+          <div class="dot"></div> Docencia o formación clínica
+        </div>
+        <div class="option-item checkbox" onclick="toggleCheck(this); toggleOtro('otro_areas',this)">
+          <input type="checkbox" name="areas" value="Otra"/>
+          <div class="dot"></div> Otra
+        </div>
+        <input type="text" id="otro_areas" class="otro-input" placeholder="Especifique…" />
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-prev" onclick="goPrev(1)">← Atrás</button>
+      <button class="btn btn-next" onclick="goNext(1)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ===== SECCIÓN 2: IDENTIDAD Y FUNCIÓN ===== -->
+  <div class="section" id="sec2">
+    <div class="section-header">
+      <div class="section-badge">Sección II</div>
+      <div class="section-title">Identidad y función del CAPSI</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">4. Indique su nivel de acuerdo con las siguientes afirmaciones <span class="req">*</span></div>
+      <div class="scale-desc">1 = Totalmente en desacuerdo &nbsp;·&nbsp; 2 = En desacuerdo &nbsp;·&nbsp; 3 = Ni de acuerdo ni en desacuerdo &nbsp;·&nbsp; 4 = De acuerdo &nbsp;·&nbsp; 5 = Totalmente de acuerdo</div>
+      <div id="likert_identidad">
+        <div class="likert-row" data-key="identidad_1">
+          <div class="likert-text">El CAPSI cumple una función clínica relevante para la comunidad.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_1',1)">1</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_1',2)">2</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_1',3)">3</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_1',4)">4</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_1',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="identidad_2">
+          <div class="likert-text">El CAPSI cumple una función formativa central para estudiantes de Psicología.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_2',1)">1</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_2',2)">2</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_2',3)">3</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_2',4)">4</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_2',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="identidad_3">
+          <div class="likert-text">El CAPSI debe articular atención clínica, formación profesional y vinculación con el medio.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_3',1)">1</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_3',2)">2</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_3',3)">3</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_3',4)">4</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_3',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="identidad_4">
+          <div class="likert-text">El CAPSI requiere criterios comunes de funcionamiento a nivel nacional.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_4',1)">1</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_4',2)">2</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_4',3)">3</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_4',4)">4</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_4',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="identidad_5">
+          <div class="likert-text">Un modelo nacional CAPSI debe respetar las diferencias de cada universidad y territorio.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_5',1)">1</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_5',2)">2</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_5',3)">3</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_5',4)">4</button>
+            <button class="likert-btn" onclick="selectLikert(this,'identidad_5',5)">5</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">5. ¿Cuáles considera los tres principios más importantes que deberían orientar el trabajo de un CAPSI? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_principios" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_principios')"></textarea>
+      <div class="char-count" id="cc_principios">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">6. ¿Qué debería poder ofrecerle un CAPSI a un/a usuario/a que no podría encontrar en otro dispositivo de salud mental? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_oferta" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_oferta')"></textarea>
+      <div class="char-count" id="cc_oferta">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-prev" onclick="goPrev(2)">← Atrás</button>
+      <button class="btn btn-next" onclick="goNext(2)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ===== SECCIÓN 3: ORGANIZACIÓN CLÍNICA ===== -->
+  <div class="section" id="sec3">
+    <div class="section-header">
+      <div class="section-badge">Sección III</div>
+      <div class="section-title">Organización clínica y criterios de ingreso</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">6. Indique en qué medida las siguientes prácticas están presentes en su CAPSI <span class="req">*</span></div>
+      <div class="scale-desc">1 = No está presente &nbsp;·&nbsp; 2 = Presente de manera informal &nbsp;·&nbsp; 3 = Parcialmente formalizada &nbsp;·&nbsp; 4 = Formalizada, aplicación variable &nbsp;·&nbsp; 5 = Formalizada y se aplica sistemáticamente</div>
+      <div id="likert_org">
+        <div class="likert-row" data-key="org_1">
+          <div class="likert-text">Procedimiento de ingreso o primera acogida.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'org_1',1)">1</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_1',2)">2</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_1',3)">3</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_1',4)">4</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_1',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="org_2">
+          <div class="likert-text">Criterios para asignación de casos.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'org_2',1)">1</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_2',2)">2</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_2',3)">3</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_2',4)">4</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_2',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="org_3">
+          <div class="likert-text">Registro de sesiones y evolución clínica.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'org_3',1)">1</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_3',2)">2</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_3',3)">3</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_3',4)">4</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_3',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="org_4">
+          <div class="likert-text">Reuniones clínicas o de coordinación.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'org_4',1)">1</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_4',2)">2</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_4',3)">3</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_4',4)">4</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_4',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="org_5">
+          <div class="likert-text">Supervisión de casos.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'org_5',1)">1</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_5',2)">2</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_5',3)">3</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_5',4)">4</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_5',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="org_6">
+          <div class="likert-text">Procedimientos para situaciones críticas.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'org_6',1)">1</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_6',2)">2</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_6',3)">3</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_6',4)">4</button>
+            <button class="likert-btn" onclick="selectLikert(this,'org_6',5)">5</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="q_criterios">
+      <div class="question-label">7. ¿Qué criterios se consideran habitualmente para aceptar, pausar o derivar un caso? <span style="font-weight:300;color:var(--text-muted)">(puede marcar más de una)</span> <span class="req">*</span></div>
+      <div class="options-list">
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="criterios" value="Riesgo suicida actual"/><div class="dot"></div> Riesgo suicida actual</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="criterios" value="Psicosis descompensada"/><div class="dot"></div> Psicosis descompensada</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="criterios" value="Consumo problemático severo de sustancias"/><div class="dot"></div> Consumo problemático severo de sustancias</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="criterios" value="Necesidad de atención psiquiátrica prioritaria"/><div class="dot"></div> Necesidad de atención psiquiátrica prioritaria</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="criterios" value="Necesidad de atención especializada no disponible en CAPSI"/><div class="dot"></div> Necesidad de atención especializada no disponible en CAPSI</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="criterios" value="Capacidad formativa del estudiante que atendería"/><div class="dot"></div> Capacidad formativa del estudiante que atendería</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="criterios" value="Disponibilidad de supervisión adecuada"/><div class="dot"></div> Disponibilidad de supervisión adecuada</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="criterios" value="Disponibilidad horaria o de cupos"/><div class="dot"></div> Disponibilidad horaria o de cupos</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this); toggleOtro('otro_criterios',this)"><input type="checkbox" name="criterios" value="Otro"/><div class="dot"></div> Otro</div>
+        <input type="text" id="otro_criterios" class="otro-input" placeholder="Especifique…" />
+      </div>
+      <div class="error-msg">Seleccione al menos una opción.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">8. ¿Qué casos generan más tensión o dificultad en el trabajo CAPSI? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_tension" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_tension')"></textarea>
+      <div class="char-count" id="cc_tension">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">9. Describa cómo es un día de trabajo típico en su CAPSI: qué ocurre, quiénes están, cómo fluye el trabajo. <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_dia_tipico" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_dia_tipico')"></textarea>
+      <div class="char-count" id="cc_dia_tipico">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">10. ¿Qué decisiones clínicas o administrativas recaen exclusivamente sobre usted como directora/coordinadora? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_decisiones" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_decisiones')"></textarea>
+      <div class="char-count" id="cc_decisiones">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-prev" onclick="goPrev(3)">← Atrás</button>
+      <button class="btn btn-next" onclick="goNext(3)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ===== SECCIÓN 4: MODELO CLÍNICO Y SUPERVISIÓN ===== -->
+  <div class="section" id="sec4">
+    <div class="section-header">
+      <div class="section-badge">Sección IV</div>
+      <div class="section-title">Modelo clínico y supervisión</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">9. Indique su nivel de acuerdo con las siguientes afirmaciones <span class="req">*</span></div>
+      <div class="scale-desc">1 = Totalmente en desacuerdo &nbsp;·&nbsp; 2 = En desacuerdo &nbsp;·&nbsp; 3 = Ni de acuerdo ni en desacuerdo &nbsp;·&nbsp; 4 = De acuerdo &nbsp;·&nbsp; 5 = Totalmente de acuerdo</div>
+      <div id="likert_clinico">
+        <div class="likert-row" data-key="clinico_1">
+          <div class="likert-text">El modelo clínico del CAPSI es claro para quienes trabajan en él.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'clinico_1',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'clinico_1',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'clinico_1',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'clinico_1',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'clinico_1',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="clinico_2">
+          <div class="likert-text">Existe coherencia entre modelo clínico, supervisión y formación de estudiantes.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'clinico_2',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'clinico_2',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'clinico_2',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'clinico_2',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'clinico_2',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="clinico_3">
+          <div class="likert-text">La supervisión permite resguardar la calidad de la atención.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'clinico_3',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'clinico_3',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'clinico_3',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'clinico_3',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'clinico_3',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="clinico_4">
+          <div class="likert-text">La supervisión permite detectar oportunamente situaciones de riesgo.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'clinico_4',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'clinico_4',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'clinico_4',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'clinico_4',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'clinico_4',5)">5</button>
+          </div>
+        </div>
+        <div class="likert-row" data-key="clinico_5">
+          <div class="likert-text">La frecuencia de supervisión es suficiente para el tipo de casos atendidos.</div>
+          <div class="likert-options">
+            <button class="likert-btn" onclick="selectLikert(this,'clinico_5',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'clinico_5',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'clinico_5',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'clinico_5',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'clinico_5',5)">5</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="q_modalidades">
+      <div class="question-label">10. ¿Qué modalidades de supervisión se utilizan habitualmente? <span style="font-weight:300;color:var(--text-muted)">(puede marcar más de una)</span></div>
+      <div class="options-list">
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="modalidades" value="Supervisión individual"/><div class="dot"></div> Supervisión individual</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="modalidades" value="Supervisión grupal"/><div class="dot"></div> Supervisión grupal</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="modalidades" value="Supervisión posterior a cada sesión"/><div class="dot"></div> Supervisión posterior a cada sesión</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="modalidades" value="Supervisión semanal"/><div class="dot"></div> Supervisión semanal</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="modalidades" value="Supervisión en sala espejo"/><div class="dot"></div> Supervisión en sala espejo</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="modalidades" value="Supervisión en vivo"/><div class="dot"></div> Supervisión en vivo</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="modalidades" value="Revisión de fichas clínicas"/><div class="dot"></div> Revisión de fichas clínicas</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="modalidades" value="Revisión de grabaciones"/><div class="dot"></div> Revisión de grabaciones</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this); toggleOtro('otro_modalidades',this)"><input type="checkbox" name="modalidades" value="Otra"/><div class="dot"></div> Otra</div>
+        <input type="text" id="otro_modalidades" class="otro-input" placeholder="Especifique…" />
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">11. ¿Qué aspectos de la supervisión considera indispensables para un modelo nacional CAPSI? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_supervision" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_supervision')"></textarea>
+      <div class="char-count" id="cc_supervision">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">13. ¿Cómo se toman las decisiones clínicas difíciles en su CAPSI? ¿Quién participa y cómo se llega a un acuerdo? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_decisiones_clinicas" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_decisiones_clinicas')"></textarea>
+      <div class="char-count" id="cc_decisiones_clinicas">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">14. ¿Qué hace usted cuando un caso la preocupa pero no hay criterio claro de cómo proceder? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_caso_dificil" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_caso_dificil')"></textarea>
+      <div class="char-count" id="cc_caso_dificil">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-prev" onclick="goPrev(4)">← Atrás</button>
+      <button class="btn btn-next" onclick="goNext(4)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ===== SECCIÓN 5: FUNCIÓN DOCENTE-ASISTENCIAL Y ÉTICA ===== -->
+  <div class="section" id="sec5">
+    <div class="section-header">
+      <div class="section-badge">Sección V</div>
+      <div class="section-title">Función docente-asistencial y ética</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">12. Indique su nivel de acuerdo con las siguientes afirmaciones <span class="req">*</span></div>
+      <div class="scale-desc">1 = Totalmente en desacuerdo &nbsp;·&nbsp; 2 = En desacuerdo &nbsp;·&nbsp; 3 = Ni de acuerdo ni en desacuerdo &nbsp;·&nbsp; 4 = De acuerdo &nbsp;·&nbsp; 5 = Totalmente de acuerdo</div>
+      <div id="likert_docente">
+        <div class="likert-row" data-key="docente_1">
+          <div class="likert-text">El rol de los/as estudiantes está claramente definido.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'docente_1',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'docente_1',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'docente_1',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'docente_1',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'docente_1',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="docente_2">
+          <div class="likert-text">Los/as usuarios/as comprenden que se trata de un dispositivo docente-asistencial.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'docente_2',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'docente_2',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'docente_2',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'docente_2',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'docente_2',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="docente_3">
+          <div class="likert-text">El CAPSI logra equilibrar función formativa y función asistencial.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'docente_3',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'docente_3',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'docente_3',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'docente_3',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'docente_3',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="docente_4">
+          <div class="likert-text">El consentimiento informado incluye información suficiente sobre el dispositivo.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'docente_4',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'docente_4',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'docente_4',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'docente_4',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'docente_4',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="docente_5">
+          <div class="likert-text">Los procedimientos para situaciones de vulneración de derechos están formalizados.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'docente_5',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'docente_5',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'docente_5',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'docente_5',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'docente_5',5)">5</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">13. ¿Qué condiciones mínimas deberían existir para que estudiantes puedan atender en un CAPSI de manera responsable? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_condiciones" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_condiciones')"></textarea>
+      <div class="char-count" id="cc_condiciones">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">16. ¿Qué aprende un/a estudiante en el CAPSI que no puede aprender en ningún otro espacio de la carrera? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_aprendizaje" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_aprendizaje')"></textarea>
+      <div class="char-count" id="cc_aprendizaje">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">17. ¿Cómo maneja situaciones en que un/a estudiante no está rindiendo clínicamente o genera preocupación ética? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_estudiante_dificil" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_estudiante_dificil')"></textarea>
+      <div class="char-count" id="cc_estudiante_dificil">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-prev" onclick="goPrev(5)">← Atrás</button>
+      <button class="btn btn-next" onclick="goNext(5)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ===== SECCIÓN 6: CONDICIONES INSTITUCIONALES Y REDES ===== -->
+  <div class="section" id="sec6">
+    <div class="section-header">
+      <div class="section-badge">Sección VI</div>
+      <div class="section-title">Condiciones institucionales y redes</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">14. Indique su nivel de acuerdo con las siguientes afirmaciones <span class="req">*</span></div>
+      <div class="scale-desc">1 = Totalmente en desacuerdo &nbsp;·&nbsp; 2 = En desacuerdo &nbsp;·&nbsp; 3 = Ni de acuerdo ni en desacuerdo &nbsp;·&nbsp; 4 = De acuerdo &nbsp;·&nbsp; 5 = Totalmente de acuerdo</div>
+      <div id="likert_inst">
+        <div class="likert-row" data-key="inst_1">
+          <div class="likert-text">El CAPSI cuenta con recursos humanos suficientes para su funcionamiento.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'inst_1',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'inst_1',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'inst_1',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'inst_1',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'inst_1',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="inst_2">
+          <div class="likert-text">La infraestructura y condiciones de privacidad son adecuadas.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'inst_2',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'inst_2',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'inst_2',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'inst_2',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'inst_2',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="inst_3">
+          <div class="likert-text">La universidad reconoce institucionalmente la complejidad del trabajo CAPSI.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'inst_3',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'inst_3',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'inst_3',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'inst_3',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'inst_3',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="inst_4">
+          <div class="likert-text">El CAPSI mantiene redes activas para derivación y continuidad de atención.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'inst_4',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'inst_4',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'inst_4',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'inst_4',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'inst_4',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="inst_5">
+          <div class="likert-text">El CAPSI contribuye al acceso a atención psicológica de personas con barreras económicas o territoriales.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'inst_5',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'inst_5',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'inst_5',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'inst_5',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'inst_5',5)">5</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">15. ¿Con qué instituciones o redes se vincula habitualmente el CAPSI? <span style="font-weight:300;color:var(--text-muted)">(puede marcar más de una)</span></div>
+      <div class="options-list">
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="redes" value="CESFAM"/><div class="dot"></div> CESFAM</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="redes" value="COSAM"/><div class="dot"></div> COSAM</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="redes" value="Hospitales"/><div class="dot"></div> Hospitales</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="redes" value="Municipios"/><div class="dot"></div> Municipios</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="redes" value="Establecimientos educacionales"/><div class="dot"></div> Establecimientos educacionales</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="redes" value="Tribunales"/><div class="dot"></div> Tribunales</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="redes" value="Programas de infancia"/><div class="dot"></div> Programas de infancia</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="redes" value="Organizaciones comunitarias"/><div class="dot"></div> Organizaciones comunitarias</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="redes" value="Otras unidades de la universidad"/><div class="dot"></div> Otras unidades de la universidad</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="redes" value="Otras universidades"/><div class="dot"></div> Otras universidades</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this)"><input type="checkbox" name="redes" value="No existe vinculación sistemática con redes externas"/><div class="dot"></div> No existe vinculación sistemática con redes externas</div>
+        <div class="option-item checkbox" onclick="toggleCheck(this); toggleOtro('otro_redes',this)"><input type="checkbox" name="redes" value="Otra"/><div class="dot"></div> Otra</div>
+        <input type="text" id="otro_redes" class="otro-input" placeholder="Especifique…" />
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">21. ¿Qué le pediría a su universidad que hiciera diferente para que el CAPSI funcione mejor? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_pedido_univ" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_pedido_univ')"></textarea>
+      <div class="char-count" id="cc_pedido_univ">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-prev" onclick="goPrev(6)">← Atrás</button>
+      <button class="btn btn-next" onclick="goNext(6)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ===== SECCIÓN 7: EVALUACIÓN ===== -->
+  <div class="section" id="sec7">
+    <div class="section-header">
+      <div class="section-badge">Sección VII</div>
+      <div class="section-title">Evaluación del funcionamiento</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">16. Indique en qué medida se registran o utilizan los siguientes elementos en su CAPSI <span class="req">*</span></div>
+      <div class="scale-desc">1 = No se registra &nbsp;·&nbsp; 2 = Se registra de manera informal &nbsp;·&nbsp; 3 = Se registra parcialmente &nbsp;·&nbsp; 4 = Se registra formalmente, pero se usa poco &nbsp;·&nbsp; 5 = Se registra formalmente y se usa para mejorar la gestión</div>
+      <div id="likert_eval">
+        <div class="likert-row" data-key="eval_1">
+          <div class="likert-text">Número de usuarios/as atendidos/as y motivos de consulta.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'eval_1',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'eval_1',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'eval_1',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'eval_1',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'eval_1',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="eval_2">
+          <div class="likert-text">Inasistencias y abandonos de proceso.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'eval_2',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'eval_2',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'eval_2',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'eval_2',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'eval_2',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="eval_3">
+          <div class="likert-text">Derivaciones y cierres planificados.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'eval_3',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'eval_3',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'eval_3',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'eval_3',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'eval_3',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="eval_4">
+          <div class="likert-text">Situaciones críticas o de riesgo.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'eval_4',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'eval_4',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'eval_4',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'eval_4',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'eval_4',5)">5</button></div>
+        </div>
+        <div class="likert-row" data-key="eval_5">
+          <div class="likert-text">Satisfacción usuaria.</div>
+          <div class="likert-options"><button class="likert-btn" onclick="selectLikert(this,'eval_5',1)">1</button><button class="likert-btn" onclick="selectLikert(this,'eval_5',2)">2</button><button class="likert-btn" onclick="selectLikert(this,'eval_5',3)">3</button><button class="likert-btn" onclick="selectLikert(this,'eval_5',4)">4</button><button class="likert-btn" onclick="selectLikert(this,'eval_5',5)">5</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">17. ¿Qué indicadores considera más importantes para evaluar el funcionamiento de un CAPSI? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_indicadores" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_indicadores')"></textarea>
+      <div class="char-count" id="cc_indicadores">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-prev" onclick="goPrev(7)">← Atrás</button>
+      <button class="btn btn-next" onclick="goNext(7)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ===== SECCIÓN 8: MODELO NACIONAL ===== -->
+  <div class="section" id="sec8">
+    <div class="section-header">
+      <div class="section-badge">Sección VIII · Final</div>
+      <div class="section-title">Hacia un modelo nacional</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">18. ¿Qué elementos deberían ser comunes a todos los CAPSI universitarios del país? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_comunes" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_comunes')"></textarea>
+      <div class="char-count" id="cc_comunes">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">19. ¿Cuáles serían las condiciones mínimas y los componentes centrales de un modelo nacional CAPSI? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_minimos" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_minimos')"></textarea>
+      <div class="char-count" id="cc_minimos">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">28. Si tuviera que describir el CAPSI ideal, ¿cómo sería? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_capsi_ideal" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_capsi_ideal')"></textarea>
+      <div class="char-count" id="cc_capsi_ideal">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">29. ¿Qué es lo que más le enorgullece del trabajo de su CAPSI? <span class="req">*</span></div>
+      <textarea class="open-textarea" id="open_orgullo" placeholder="Desarrolle su respuesta aquí…" oninput="countChars(this,'cc_orgullo')"></textarea>
+      <div class="char-count" id="cc_orgullo">0 caracteres</div>
+      <div class="error-msg">Este campo es requerido.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">30. ¿Desea agregar algún aspecto que no haya sido considerado en este cuestionario?</div>
+      <textarea class="open-textarea" id="open_adicional" placeholder="Opcional…" oninput="countChars(this,'cc_adicional')"></textarea>
+      <div class="char-count" id="cc_adicional">0 caracteres</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-prev" onclick="goPrev(8)">← Atrás</button>
+      <button class="btn btn-submit" onclick="submitForm()">Enviar respuestas →</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✓</div>
+    <h2>¡Gracias por su respuesta!</h2>
+    <p>Sus respuestas han sido registradas correctamente. Su aporte es fundamental para el desarrollo del modelo nacional CAPSI.</p>
+  </div>
+
+</div>
+
+<script>
+  // =====================
+  // GOOGLE SHEETS URL
+  // =====================
+  const FORMSPREE_URL = "https://formspree.io/f/xwvjbepr";
+
+  // =====================
+  // STATE
+  // =====================
+  const likertValues = {};
+  let currentSection = 0;
+  const totalSections = 8;
+
+  // =====================
+  // PROGRESS
+  // =====================
+  function updateProgress(sec) {
+    const pct = Math.round((sec / totalSections) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+    document.getElementById('progressLabel').textContent =
+      sec === 0 ? 'Inicio' : `Sección ${sec} de ${totalSections}`;
+  }
+
+  // =====================
+  // NAVIGATION
+  // =====================
+  function goNext(from) {
+    if (!validateSection(from)) return;
+    document.getElementById('sec'+from).classList.remove('active');
+    currentSection = from + 1;
+    document.getElementById('sec'+currentSection).classList.add('active');
+    updateProgress(currentSection);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function goPrev(from) {
+    document.getElementById('sec'+from).classList.remove('active');
+    currentSection = from - 1;
+    document.getElementById('sec'+currentSection).classList.add('active');
+    updateProgress(currentSection);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // =====================
+  // RADIO
+  // =====================
+  function selectRadio(el, name) {
+    document.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
+      inp.closest('.option-item').classList.remove('selected');
+    });
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+  }
+
+  // =====================
+  // CHECKBOX
+  // =====================
+  function toggleCheck(el) {
+    el.classList.toggle('selected');
+    el.querySelector('input').checked = el.classList.contains('selected');
+  }
+
+  // =====================
+  // OTRO
+  // =====================
+  function toggleOtro(id, el) {
+    const input = document.getElementById(id);
+    if (el.classList.contains('selected')) {
+      input.classList.add('show-otro');
+    } else {
+      input.classList.remove('show-otro');
+      input.value = '';
+    }
+  }
+
+  // =====================
+  // LIKERT
+  // =====================
+  function selectLikert(btn, key, val) {
+    const row = btn.closest('.likert-row');
+    row.querySelectorAll('.likert-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    likertValues[key] = val;
+  }
+
+  // =====================
+  // CHAR COUNT
+  // =====================
+  function countChars(el, counterId) {
+    document.getElementById(counterId).textContent = el.value.length + ' caracteres';
+  }
+
+  // =====================
+  // VALIDATION
+  // =====================
+  function validateSection(sec) {
+    let valid = true;
+
+    if (sec === 0) {
+      ['nombre','sede'].forEach(id => {
+        const el = document.getElementById(id);
+        const card = el.closest('.card');
+        if (!el.value.trim()) { card.classList.add('has-error'); valid = false; }
+        else card.classList.remove('has-error');
+      });
+    }
+
+    if (sec === 1) {
+      ['rol','tiempo'].forEach(name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        const card = document.getElementById('q_'+name);
+        if (!checked) { card.classList.add('has-error'); valid = false; }
+        else card.classList.remove('has-error');
+      });
+    }
+
+    if (sec === 2) {
+      ['open_principios','open_oferta'].forEach(id => {
+        const el = document.getElementById(id);
+        const card = el.closest('.card');
+        if (!el.value.trim()) { card.classList.add('has-error'); valid = false; }
+        else card.classList.remove('has-error');
+      });
+    }
+
+    if (sec === 3) {
+      const checked = document.querySelectorAll('input[name="criterios"]:checked');
+      const card = document.getElementById('q_criterios');
+      if (checked.length === 0) { card.classList.add('has-error'); valid = false; }
+      else card.classList.remove('has-error');
+
+      ['open_tension','open_dia_tipico','open_decisiones'].forEach(id => {
+        const el = document.getElementById(id);
+        const c = el.closest('.card');
+        if (!el.value.trim()) { c.classList.add('has-error'); valid = false; }
+        else c.classList.remove('has-error');
+      });
+    }
+
+    if (sec === 4) {
+      ['open_supervision','open_decisiones_clinicas','open_caso_dificil'].forEach(id => {
+        const el = document.getElementById(id);
+        const c = el.closest('.card');
+        if (!el.value.trim()) { c.classList.add('has-error'); valid = false; }
+        else c.classList.remove('has-error');
+      });
+    }
+
+    if (sec === 5) {
+      ['open_condiciones','open_aprendizaje','open_estudiante_dificil'].forEach(id => {
+        const el = document.getElementById(id);
+        const c = el.closest('.card');
+        if (!el.value.trim()) { c.classList.add('has-error'); valid = false; }
+        else c.classList.remove('has-error');
+      });
+    }
+
+    if (sec === 6) {
+      const el = document.getElementById('open_pedido_univ');
+      const c = el.closest('.card');
+      if (!el.value.trim()) { c.classList.add('has-error'); valid = false; }
+      else c.classList.remove('has-error');
+    }
+
+    if (sec === 7) {
+      const openEl = document.getElementById('open_indicadores');
+      const openCard = openEl.closest('.card');
+      if (!openEl.value.trim()) { openCard.classList.add('has-error'); valid = false; }
+      else openCard.classList.remove('has-error');
+    }
+
+    if (!valid) window.scrollTo({top: document.querySelector('.has-error')?.offsetTop - 80 || 0, behavior:'smooth'});
+    return valid;
+  }
+
+  // =====================
+  // COLLECT DATA
+  // =====================
+  function collectData() {
+    const getRadio = name => {
+      const el = document.querySelector(`input[name="${name}"]:checked`);
+      return el ? el.value : '';
+    };
+    const getCheckboxes = name => {
+      return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
+        .map(el => el.value).join('; ');
+    };
+    const getOpen = id => document.getElementById(id)?.value || '';
+
+    return {
+      timestamp: new Date().toLocaleString('es-CL'),
+      nombre: getOpen('nombre'),
+      sede: getOpen('sede'),
+      // S1
+      rol: getRadio('rol') + (document.getElementById('otro_rol')?.value ? ` — ${document.getElementById('otro_rol').value}` : ''),
+      tiempo: getRadio('tiempo'),
+      areas: getCheckboxes('areas') + (document.getElementById('otro_areas')?.value ? `; ${document.getElementById('otro_areas').value}` : ''),
+      // S2
+      identidad_1: likertValues['identidad_1'] || '',
+      identidad_2: likertValues['identidad_2'] || '',
+      identidad_3: likertValues['identidad_3'] || '',
+      identidad_4: likertValues['identidad_4'] || '',
+      identidad_5: likertValues['identidad_5'] || '',
+      open_principios: getOpen('open_principios'),
+      // S3
+      org_1: likertValues['org_1'] || '',
+      org_2: likertValues['org_2'] || '',
+      org_3: likertValues['org_3'] || '',
+      org_4: likertValues['org_4'] || '',
+      org_5: likertValues['org_5'] || '',
+      org_6: likertValues['org_6'] || '',
+      criterios: getCheckboxes('criterios') + (document.getElementById('otro_criterios')?.value ? `; ${document.getElementById('otro_criterios').value}` : ''),
+      open_tension: getOpen('open_tension'),
+      // S4
+      clinico_1: likertValues['clinico_1'] || '',
+      clinico_2: likertValues['clinico_2'] || '',
+      clinico_3: likertValues['clinico_3'] || '',
+      clinico_4: likertValues['clinico_4'] || '',
+      clinico_5: likertValues['clinico_5'] || '',
+      modalidades: getCheckboxes('modalidades') + (document.getElementById('otro_modalidades')?.value ? `; ${document.getElementById('otro_modalidades').value}` : ''),
+      open_supervision: getOpen('open_supervision'),
+      // S5
+      docente_1: likertValues['docente_1'] || '',
+      docente_2: likertValues['docente_2'] || '',
+      docente_3: likertValues['docente_3'] || '',
+      docente_4: likertValues['docente_4'] || '',
+      docente_5: likertValues['docente_5'] || '',
+      open_condiciones: getOpen('open_condiciones'),
+      // S6
+      inst_1: likertValues['inst_1'] || '',
+      inst_2: likertValues['inst_2'] || '',
+      inst_3: likertValues['inst_3'] || '',
+      inst_4: likertValues['inst_4'] || '',
+      inst_5: likertValues['inst_5'] || '',
+      redes: getCheckboxes('redes') + (document.getElementById('otro_redes')?.value ? `; ${document.getElementById('otro_redes').value}` : ''),
+      // S7
+      eval_1: likertValues['eval_1'] || '',
+      eval_2: likertValues['eval_2'] || '',
+      eval_3: likertValues['eval_3'] || '',
+      eval_4: likertValues['eval_4'] || '',
+      eval_5: likertValues['eval_5'] || '',
+      open_indicadores: getOpen('open_indicadores'),
+      // S8
+      open_comunes: getOpen('open_comunes'),
+      open_minimos: getOpen('open_minimos'),
+      open_adicional: getOpen('open_adicional'),
+      // New questions
+      open_oferta: getOpen('open_oferta'),
+      open_dia_tipico: getOpen('open_dia_tipico'),
+      open_decisiones: getOpen('open_decisiones'),
+      open_decisiones_clinicas: getOpen('open_decisiones_clinicas'),
+      open_caso_dificil: getOpen('open_caso_dificil'),
+      open_aprendizaje: getOpen('open_aprendizaje'),
+      open_estudiante_dificil: getOpen('open_estudiante_dificil'),
+      open_pedido_univ: getOpen('open_pedido_univ'),
+      open_capsi_ideal: getOpen('open_capsi_ideal'),
+      open_orgullo: getOpen('open_orgullo'),
+    };
+  }
+
+  // =====================
+  // SUBMIT
+  // =====================
+  async function submitForm() {
+    // validate last section
+    const opens = ['open_comunes','open_minimos','open_capsi_ideal','open_orgullo'];
+    let valid = true;
+    opens.forEach(id => {
+      const el = document.getElementById(id);
+      const card = el.closest('.card');
+      if (!el.value.trim()) { card.classList.add('has-error'); valid = false; }
+      else card.classList.remove('has-error');
+    });
+    if (!valid) { window.scrollTo({top: document.querySelector('.has-error')?.offsetTop - 80 || 0, behavior:'smooth'}); return; }
+
+    document.getElementById('sendingOverlay').classList.add('show');
+    const data = collectData();
+
+    try {
+      await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } catch(e) {
+      console.error('Error enviando:', e);
+    }
+
+    document.getElementById('sendingOverlay').classList.remove('show');
+    document.getElementById('sec8').classList.remove('active');
+    document.getElementById('successScreen').classList.add('show');
+    updateProgress(totalSections);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // Init
+  updateProgress(0);
+</script>
+</body>
+</html>
